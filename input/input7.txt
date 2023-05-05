@@ -1,0 +1,6 @@
+' Funciones incorporadas
+
+Array.ContainIndex(array, index)
+TextWindow.Read()
+Stack.push(stack, item)
+Program.delay(30000)

@@ -1,0 +1,5 @@
+' Verifiquemos que se puedan utilizar
+' operadores relacionales en funciones
+' built-in. Esto crearía valores lógicos
+
+TextWindow.WriteLine((-(3+5)) < 8)

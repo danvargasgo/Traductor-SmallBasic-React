@@ -1,0 +1,4 @@
+x[alguna_posicion] = 2*5.0/x[1]
+y[otra_posición] = TextWindow.Read()
+alguna_funcion()
+EOF == "$"

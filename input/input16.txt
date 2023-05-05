@@ -1,0 +1,8 @@
+If (x = (a*3))
+   TextWindow.WriteLine("EOF")
+Else x <> (a*3)
+   Goto end
+
+
+end:
+Program.end()

@@ -1,0 +1,4 @@
+caso = Hola()
+
+' Las funciones no retornan nada, por ende
+' esto es un error

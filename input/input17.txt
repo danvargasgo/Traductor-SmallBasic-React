@@ -1,0 +1,5 @@
+x = 0
+While x >= 0
+   TextWindow.Write("Ciclo Infinito")
+   x = x + 1
+EndWhile

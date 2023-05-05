@@ -1,0 +1,2 @@
+Array.something(b, c, d, e, f, )
+' ¿Servirá dejando un espacio vacío? Sí

@@ -1,0 +1,3 @@
+While ((-(a[3]+5)) < mi_funcion())
+   x = TextWindow.Read()
+EndWhile
