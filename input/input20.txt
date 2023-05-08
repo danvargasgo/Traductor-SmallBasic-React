@@ -1,2 +1,13 @@
+start:
+TextWindow.WriteLine(i)
+i = i + 1
+If (i < 25) Then
+  Goto start
+EndIf
+
+infinite:
+  TextWindow.WriteLine("Infinito")
+Goto infinite
+
 ignorar:
   b = 3
