@@ -10,7 +10,7 @@ public class Main {
         SmallLexer lexer;
 
         if (args.length>0)
-            lexer = new SmallLexer(CharStreams.fromFileName(args[0]));
+            lexer = new SmallLexer(CharStreams.fromFileName("input/input20.txt"));
         else
             lexer = new SmallLexer(CharStreams.fromStream(System.in));
 // create a buffer of tokens pulled from the lexer

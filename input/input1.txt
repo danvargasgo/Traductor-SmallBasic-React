@@ -1,10 +1,5 @@
-x = TextWindow.Read()
-y = TextWindow.Read()
-
-If (x > y) Then
-   max = x
+If (Hour < 12) Then
+  TextWindow.WriteLine("¡Buenos días Mundo!")
 Else
-   max = y
+  TextWindow.WriteLine("¡Buenas tardes Mundo!")
 EndIf
-
-TextWindow.WriteLine(max)
