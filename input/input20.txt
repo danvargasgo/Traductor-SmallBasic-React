@@ -1,5 +1,2 @@
-start2:
-for a = 0 To 10 Step 1
-   TextWindow.WriteLine(a)
-   Goto start2
-EndFor
+ignorar:
+  b = 3

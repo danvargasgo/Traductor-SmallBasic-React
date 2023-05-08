@@ -73,6 +73,8 @@ public class SmallToJS extends SmallBaseListener {
             funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
                     1) + ctx.ID().getText() + "()" + "\n");
             if (!etiquetas_creadas.contains(ctx.ID().getText())) {
+                ArrayList<String> funciones_internas = new ArrayList<String>();
+                Integer contador_funciones_internas = 0;
                 etiquetas_creadas.add(ctx.ID().getText());
                 System.out.println("function " + ctx.ID().getText() + "() {");
                 for (int i = funciones_etiquetas.indexOf(ctx.ID().getText()) + 1; i < funciones_etiquetas.size(); i+=1) {
@@ -80,13 +82,19 @@ public class SmallToJS extends SmallBaseListener {
                         if (etiquetas_creadas.contains(funciones_etiquetas.get(i))) {
                             System.out.println(funciones_etiquetas.get(i) + "()");
                             break;
-                        } else {
+                        } /*else {
                             System.out.println("function " + funciones_etiquetas.get(i) + "() {");
-                        }
+                            funciones_internas.add(funciones_etiquetas.get(i) + "()");
+                            contador_funciones_internas += 1;
+                        }*/
                     } else {
                             System.out.print(funciones_etiquetas.get(i));
                     }
                 }
+                /*for (int i = 0; i < contador_funciones_internas; i+=1) {
+                    System.out.println("}");
+                    System.out.println(funciones_internas.get(i));
+                }*/
                 System.out.println("}");
             }
             System.out.println(ctx.ID().getText() + "()");
@@ -97,8 +105,8 @@ public class SmallToJS extends SmallBaseListener {
                 funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
                         1) + ctx.getText() + "\n");
             } else {
-                funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
-                        1) + ctx.ID().getText());
+                /*funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
+                        1) + ctx.ID().getText());*/
             }
         }
     }

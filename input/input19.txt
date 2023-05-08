@@ -4,7 +4,6 @@ i = i + 1
 start2:
 TextWindow.WriteLine(i)
 Hola = 1
+Goto start3
 Goto start
-Goto start
-Goto start2
 a = 2
