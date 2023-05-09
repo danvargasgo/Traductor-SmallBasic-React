@@ -11,6 +11,7 @@ public class SmallToJS extends SmallBaseListener {
     String traduccion_for = "";
     String traduccion_while = "";
     String traduccion_funcion = "";
+    String traduccion_array = "";
     /*
      * Private methods for array translation
      */
@@ -33,6 +34,13 @@ public class SmallToJS extends SmallBaseListener {
         }
         declareObject += "= {}";
         System.out.println(declareObject);
+
+        traduccion_array += declareObject + "\n";
+        if (funciones_etiquetas.size() != 0) {
+            funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
+                    1) + traduccion_array);
+        }
+        traduccion_array = "";
     }
     private void checkObjectDeclaration(SmallParser.Va_op_dimContext ctx){
         // Check if the dictionaries(arrays) have already been declared, if not, create the necessary arrays and nestings
@@ -216,6 +224,13 @@ public class SmallToJS extends SmallBaseListener {
             if (va_op_dim != null && va_op_dim.getChild(0) != null){
                 checkObjectDeclaration((SmallParser.Va_op_dimContext) va_op_dim);
                 System.out.print(ctx.getChild(0).getText());
+
+                traduccion_array += ctx.getChild(0).getText();
+                if (funciones_etiquetas.size() != 0) {
+                    funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
+                            1) + traduccion_array);
+                }
+                traduccion_array = "";
             }
         }
 
