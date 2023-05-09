@@ -1,0 +1,9 @@
+b = 15
+h = 11
+
+rectangle_area = b*h
+triangle_area = rectangle_area/2
+
+TextWindow.WriteLine(rectangle_area)
+TextWindow.WriteLine("-------")
+TextWindow.WriteLine(triangle_area)
