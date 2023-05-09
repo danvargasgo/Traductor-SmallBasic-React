@@ -59,10 +59,6 @@ public class SmallToJS extends SmallBaseListener{
     }
 
     @Override
-    public void exitVa_op_dim(SmallParser.Va_op_dimContext ctx){
-        ParseTree firstChild = ctx.getChild(0);
-    }
-    @Override
     public void enterId(SmallParser.IdContext ctx){
         ParseTree va_op_dim = ctx.getChild(1).getChild(0).getChild(0);
         if (va_op_dim != null && va_op_dim.getChild(0) != null){
