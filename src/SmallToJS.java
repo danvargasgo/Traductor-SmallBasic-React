@@ -3,13 +3,16 @@ import java.util.HashMap;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class SmallToJS extends SmallBaseListener {
+    String traduccion_for = "";
+    String traduccion_while = "";
+    String traduccion_funcion = "";
     /*
      * FOR LOOPS
      * */
     @Override
     public void enterF(SmallParser.FContext ctx){
         //  For (let ID VA; ID <= EX; ID+=STEP){
-        System.out.print("For(let ");
+        System.out.print("for(let ");
 
         String id = ctx.ID().getText();
         System.out.print(id);
@@ -22,23 +25,33 @@ public class SmallToJS extends SmallBaseListener {
         String ex = ctx.ex().getText();
         System.out.print(ex);
         System.out.print(";");
+        traduccion_for += "for(let " + id + va + ";" + id + "<=" + ex + ";";
 
         SmallParser.St1Context st1 = ctx.st().st1();
         if(st1 != null){
             System.out.print(id);
             System.out.print("+=");
             System.out.print(st1.getText());
+            traduccion_for += id + "+=" + st1.getText();
         }else{
             System.out.print(id);
             System.out.print("++");
+            traduccion_for += id + "++";
         }
 
         System.out.println("){");
+        traduccion_for += "){\n";
     }
     @Override
     public void exitF(SmallParser.FContext ctx){
         // }
         System.out.println("}");
+        traduccion_for += "}\n";
+        if (funciones_etiquetas.size() != 0) {
+            funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
+                    1) + traduccion_for + "\n");
+        }
+        traduccion_for = "";
     }
 
     /*
@@ -52,19 +65,28 @@ public class SmallToJS extends SmallBaseListener {
             System.out.print("var ");
             System.out.print(id);
             System.out.println(";");
+            traduccion_while += "var " + id + ";\n";
         }
-        System.out.print("While (");
+        System.out.print("while(");
 
         String ex = ctx.ex().getText();
 
         System.out.print(ex);
 
         System.out.println("){");
+
+        traduccion_while += "while(" + ex + "){\n";
     }
     @Override
     public void exitW(SmallParser.WContext ctx){
         // }
         System.out.println("}");
+        traduccion_while += "}\n";
+        if (funciones_etiquetas.size() != 0) {
+            funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
+                    1) + traduccion_while + "\n");
+        }
+        traduccion_while = "";
     };
 
     /*
@@ -76,10 +98,17 @@ public class SmallToJS extends SmallBaseListener {
         String id = ctx.ID().getText();
         System.out.print(id);
         System.out.println("(){");
+        traduccion_funcion += "function " + id + "(){\n";
     };
     @Override
     public void exitSu(SmallParser.SuContext ctx){
         System.out.println("} ");
+        traduccion_funcion += "}\n";
+        if (funciones_etiquetas.size() != 0) {
+            funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
+                    1) + traduccion_funcion + "\n");
+        }
+        traduccion_funcion = "";
     };
 
     /////////////////////////////////////////////////// Condicional ////////////////////////////////////////////////////
@@ -97,7 +126,7 @@ public class SmallToJS extends SmallBaseListener {
     public void exitC(SmallParser.CContext ctx) {
         System.out.println("}");
         traduccion_if += "}";
-        if (funciones_etiquetas.size() != 0) {
+        if (funciones_etiquetas.size() > 0) {
             funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
                     1) + traduccion_if + "\n");
         }
@@ -178,16 +207,16 @@ public class SmallToJS extends SmallBaseListener {
                 System.out.println("}");
             }
             System.out.println(ctx.ID().getText() + "()");
-        } else if (ctx.c() == null &&
+        } /*else if (ctx.f() == null && ctx.c() == null && ctx.w() == null &&
                 (ctx.id() == null || ctx.id().id1() == null || ctx.id().id1().COLON() == null) && funciones_etiquetas.size() != 0) {
-            if (ctx.GOTO() == null) {
-                System.out.println(ctx.getText());
-                funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
-                        1) + ctx.getText() + "\n");
-            } else {
+            //if (ctx.GOTO() == null) {
+                //System.out.println(ctx.getText());
+                //funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
+                //        1) + ctx.getText() + "\n");
+            //} else {
                 /*funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
-                        1) + ctx.ID().getText());*/
+                        1) + ctx.ID().getText());
             }
-        }
+        }*/
     }
 }
