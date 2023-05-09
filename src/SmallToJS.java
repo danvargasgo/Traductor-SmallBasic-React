@@ -204,11 +204,14 @@ public class SmallToJS extends SmallBaseListener {
         }
 
         // arrays
-        ParseTree va_op_dim = ctx.getChild(1).getChild(0).getChild(0);
-        if (va_op_dim != null && va_op_dim.getChild(0) != null){
-            checkObjectDeclaration((SmallParser.Va_op_dimContext) va_op_dim);
-            System.out.print(ctx.getChild(0).getText());
+        if (ctx.id1().va() != null){
+            ParseTree va_op_dim = ctx.id1().va().va_op_dim();
+            if (va_op_dim != null && va_op_dim.getChild(0) != null){
+                checkObjectDeclaration((SmallParser.Va_op_dimContext) va_op_dim);
+                System.out.print(ctx.getChild(0).getText());
+            }
         }
+
     }
 
     @Override

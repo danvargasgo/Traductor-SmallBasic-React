@@ -13,3 +13,9 @@ EndIf
 For i = 0 To 10 Step 1 ' Redundante
    TextWindow.Write(i)
 EndFor
+
+TextWindow.Write(a)
+
+For i = 1 To tamaño_del_arreglo
+   TextWindow.WriteLine(1)
+EndFor
