@@ -32,7 +32,7 @@ public class SmallToJS extends SmallBaseListener {
         for(int i=1; i<keyArray.length; i++){
             declareObject += "[" + keyArray[i] + "]";
         }
-        declareObject += "= {}";
+        declareObject += " = {}";
         System.out.println(declareObject);
 
         traduccion_array += declareObject + "\n";
@@ -61,15 +61,9 @@ public class SmallToJS extends SmallBaseListener {
                         printNewObject(key.strip());
                     }
                 }
-                //System.out.println(declaredDictionaries);
-                //System.out.println(ctx.getText());
-                //System.out.println(ID.getText());
             }
         }
     }
-
-
-
 
     /*
      * FOR LOOPS
@@ -219,22 +213,141 @@ public class SmallToJS extends SmallBaseListener {
         }
 
         // arrays
-        if (ctx.id1().va() != null){
+        else if (ctx.id1().va() != null){
             ParseTree va_op_dim = ctx.id1().va().va_op_dim();
             if (va_op_dim != null && va_op_dim.getChild(0) != null){
                 checkObjectDeclaration((SmallParser.Va_op_dimContext) va_op_dim);
-                System.out.print(ctx.getChild(0).getText());
+                String idValue = ctx.ID().getText();
 
-                traduccion_array += ctx.getChild(0).getText();
+                traduccion_array += idValue;
                 if (funciones_etiquetas.size() != 0) {
                     funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
                             1) + traduccion_array);
                 }
                 traduccion_array = "";
             }
+            System.out.print(ctx.ID().getText());
+        }
+
+        else{
+            System.out.print(ctx.ID().getText());
         }
 
     }
+    @Override
+    public void enterVa_op_dim(SmallParser.Va_op_dimContext ctx){
+        if (ctx.LEFT_BRAC() != null){
+            System.out.print("[");
+        }
+    }
+
+    @Override
+    public void enterEx(SmallParser.ExContext ctx){
+        if (ctx.MINUS() != null){
+            System.out.print("-");
+        }
+    }
+
+    @Override
+    public void enterEx1(SmallParser.Ex1Context ctx){
+        if (ctx.OR() != null){
+            System.out.print(" || ");
+        }
+    }
+
+    @Override
+    public void enterEb1(SmallParser.Eb1Context ctx){
+        if (ctx.AND() != null){
+            System.out.print(" && ");
+        }
+    }
+
+    @Override
+    public void enterRo(SmallParser.RoContext ctx){
+        if (ctx.LESS() != null){
+            System.out.print(" < ");
+        } else if (ctx.GREATER() != null) {
+            System.out.print(" > ");
+        } else if (ctx.EQUALS() != null) {
+            System.out.print(" == ");
+        } else if (ctx.LEQ() != null) {
+            System.out.print(" <= ");
+        } else if (ctx.GEQ() != null){
+            System.out.print(" >= ");
+        } else if (ctx.DIFF() != null) {
+            System.out.print(" != ");
+        }
+    }
+
+    @Override
+    public void enterSo(SmallParser.SoContext ctx){
+        if (ctx.MINUS() != null){
+            System.out.print(" - ");
+        } else if (ctx.PLUS() != null) {
+            System.out.print(" + ");
+        }
+    }
+
+    @Override
+    public void enterMo(SmallParser.MoContext ctx){
+        if (ctx.TIMES() != null){
+            System.out.print(" * ");
+        } else if (ctx.DIV() != null) {
+            System.out.print(" / ");
+        }
+    }
+
+    @Override
+    public void enterD(SmallParser.DContext ctx){
+        if (ctx.STR() != null){
+            System.out.print(ctx.getText());
+        } else if ( ctx.TRUE() != null) {
+            System.out.print(" true ");
+        } else if ( ctx.FALSE() != null) {
+            System.out.print(" false ");
+        } else if ( ctx.NUM() != null) {
+            System.out.print(ctx.NUM().getText());
+        } else if ( ctx.LEFT_PAREN() != null) {
+            System.out.print("(");
+        } else if ( ctx.ID() != null) {
+            System.out.print(ctx.ID().getText());
+        }
+    }
+    @Override
+    public void enterId_op_dim(SmallParser.Id_op_dimContext ctx){
+        if (ctx.LEFT_BRAC() != null){
+            System.out.print("[");
+        }
+    }
+
+    @Override
+    public void exitEx(SmallParser.ExContext ctx){
+        // Check if this expression is an index for an array or dictionary
+        if(ctx.getParent().getRuleIndex() == 7){
+            System.out.print("]");
+        }
+        // Check if the right hand side expression is completed
+        else if(ctx.getParent().getRuleIndex() == 6){
+            System.out.println(";");
+        }
+        // Check if the expression is being called inside parenthesis
+        else if(ctx.getParent().getRuleIndex() == 36){
+            System.out.print(")");
+        }
+        // Check if the expression is being called inside brackets
+        else if (ctx.getParent().getRuleIndex() == 37) {
+            System.out.print("]");
+        }
+    }
+
+    @Override
+    public void exitVa_op_dim(SmallParser.Va_op_dimContext ctx){
+        // Check if the left side of the assignation is already complete, if it is, print the equals symbol
+        if(ctx.getParent().getRuleIndex() == 6){
+            System.out.print(" = ");
+        }
+    }
+
 
     @Override
     public void enterS(SmallParser.SContext ctx) {
