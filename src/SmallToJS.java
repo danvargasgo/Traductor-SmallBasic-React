@@ -50,15 +50,9 @@ public class SmallToJS extends SmallBaseListener {
                         printNewObject(key.strip());
                     }
                 }
-                //System.out.println(declaredDictionaries);
-                //System.out.println(ctx.getText());
-                //System.out.println(ID.getText());
             }
         }
     }
-
-
-
 
     /*
      * FOR LOOPS
@@ -311,11 +305,11 @@ public class SmallToJS extends SmallBaseListener {
             System.out.println(";");
         }
         // Check if the expression is being called inside parenthesis
-        else if(ctx.getParent().getRuleIndex() == 37){
+        else if(ctx.getParent().getRuleIndex() == 36){
             System.out.print(")");
         }
         // Check if the expression is being called inside brackets
-        else if (ctx.getParent().getRuleIndex() == 38) {
+        else if (ctx.getParent().getRuleIndex() == 37) {
             System.out.print("]");
         }
     }
