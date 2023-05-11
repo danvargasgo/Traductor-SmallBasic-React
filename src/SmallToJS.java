@@ -156,6 +156,7 @@ public class SmallToJS extends SmallBaseListener {
         System.out.print("function ");
         String id = ctx.ID().getText();
         System.out.print(id);
+        System.out.print(id);
         System.out.println("(){");
         traduccion_funcion += "function " + id + "(){\n";
     };
@@ -321,6 +322,21 @@ public class SmallToJS extends SmallBaseListener {
     }
 
     @Override
+    public void enterBf(SmallParser.BfContext ctx){
+        // Check built in functions
+        if(ctx.rw() != null){
+            if(ctx.rw().getText().equals("TextWindow")){
+                if(ctx.ID().getText().equals("Write") || ctx.ID().getText().equals("WriteLine")){
+                    System.out.print("console.log(");
+                }
+                else if (ctx.ID().getText().equals("Read")) {
+                    System.out.print("prompt()");
+                }
+            }
+        }
+    }
+
+    @Override
     public void exitEx(SmallParser.ExContext ctx){
         // Check if this expression is an index for an array or dictionary
         if(ctx.getParent().getRuleIndex() == 7){
@@ -337,6 +353,13 @@ public class SmallToJS extends SmallBaseListener {
         // Check if the expression is being called inside brackets
         else if (ctx.getParent().getRuleIndex() == 37) {
             System.out.print("]");
+        }
+        // Check for textWindow function
+        else if (ctx.getParent().getRuleIndex() == 21){
+            SmallParser.BfContext bf = (SmallParser.BfContext)ctx.getParent().getParent().getParent().getParent();
+            if(bf.rw().getText().equals("TextWindow")){
+                System.out.println(");");
+            }
         }
     }
 

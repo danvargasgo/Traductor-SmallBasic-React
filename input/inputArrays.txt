@@ -1,1 +1,6 @@
 a = (2+3)/2
+a = True Or False
+
+TextWindow.Write("a")
+TextWindow.Adios()
+TextWindow.Read(2)
