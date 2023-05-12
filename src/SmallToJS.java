@@ -12,6 +12,7 @@ public class SmallToJS extends SmallBaseListener {
     String traduccion_while = "";
     String traduccion_funcion = "";
     String traduccion_array = "";
+    // Variable that determines if expressions low in the syntax tree should be translated (In some cases when in need of a custom translation it must be disabled)
     Boolean shouldTranslate = true;
     /*
      * Private method for stacks
@@ -22,6 +23,16 @@ public class SmallToJS extends SmallBaseListener {
         if (!this.stackNames.contains(name)){
             stackNames.add(name);
             System.out.printf("var %s=[];\n", name);
+        }
+    }
+    /*
+     * Check if variable has already been defined
+     */
+    private static Set<String> variableNames = new HashSet<String>();
+    private void declareVariable(String name){
+        if (!this.variableNames.contains(name) && !this.declaredDObjects.contains(name)){
+            variableNames.add(name);
+            System.out.printf("var ", name);
         }
     }
 
@@ -45,7 +56,7 @@ public class SmallToJS extends SmallBaseListener {
         for(int i=1; i<keyArray.length; i++){
             declareObject += "[" + keyArray[i] + "]";
         }
-        declareObject += " = {}";
+        declareObject += " = {};";
         System.out.println(declareObject);
 
         traduccion_array += declareObject + "\n";
@@ -113,6 +124,9 @@ public class SmallToJS extends SmallBaseListener {
 
         System.out.println("){");
         traduccion_for += "){\n";
+
+        // Don't translate the expressions in the for loop header
+        shouldTranslate = false;
     }
     @Override
     public void exitF(SmallParser.FContext ctx){
@@ -126,6 +140,11 @@ public class SmallToJS extends SmallBaseListener {
         traduccion_for = "";
     }
 
+    @Override
+    public void enterFsl(SmallParser.FslContext ctx){
+        shouldTranslate = true;
+    }
+
     /*
      * WHILE LOOPS
      * */
@@ -134,20 +153,20 @@ public class SmallToJS extends SmallBaseListener {
         //    While ( EX ) {
         TerminalNode id = ctx.ex().eb().er().es().em().d().ID();
         if(id != null){
-            System.out.print("var ");
-            System.out.print(id);
-            System.out.println(";");
+            //System.out.print("var ");
+            //System.out.print(id);
+            //System.out.println(";");
             traduccion_while += "var " + id + ";\n";
         }
         System.out.print("while(");
 
-        String ex = ctx.ex().getText();
+        //String ex = ctx.ex().getText();
 
-        System.out.print(ex);
+        //System.out.print(ex);
 
-        System.out.println("){");
+        //System.out.println("){");
 
-        traduccion_while += "while(" + ex + "){\n";
+        //traduccion_while += "while(" + ex + "){\n";
     }
     @Override
     public void exitW(SmallParser.WContext ctx){
@@ -191,7 +210,8 @@ public class SmallToJS extends SmallBaseListener {
     @Override
     public void enterC(SmallParser.CContext ctx) {
         traduccion_if += "if (" + ctx.ex().getText() + ") {" + "\n";
-        System.out.println("if (" + ctx.ex().getText() + ") {");
+        //System.out.println("if (" + ctx.ex().getText() + ") {");
+        System.out.print("if(");
     }
 
     @Override
@@ -241,6 +261,7 @@ public class SmallToJS extends SmallBaseListener {
                     }
                     traduccion_array = "";
                 }
+                declareVariable(ctx.ID().getText());
                 System.out.print(ctx.ID().getText());
             }
 
@@ -479,10 +500,11 @@ public class SmallToJS extends SmallBaseListener {
                     }
                     System.out.println(";");
                 }
-
             }
-
-
+            // Check if expression is being called in a while or in an if
+            else if (ctx.getParent().getRuleIndex() == 15 || ctx.getParent().getRuleIndex() == 8 ) {
+                System.out.println("){");
+            }
         }
     }
 
