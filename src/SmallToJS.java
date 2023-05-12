@@ -12,6 +12,19 @@ public class SmallToJS extends SmallBaseListener {
     String traduccion_while = "";
     String traduccion_funcion = "";
     String traduccion_array = "";
+    Boolean shouldTranslate = true;
+    /*
+     * Private method for stacks
+     */
+    private static Set<String> stackNames = new HashSet<String>();
+
+    private void declareStack(String name){
+        if (!this.stackNames.contains(name)){
+            stackNames.add(name);
+            System.out.printf("var %s=[];\n", name);
+        }
+    }
+
     /*
      * Private methods for array translation
      */
@@ -208,166 +221,278 @@ public class SmallToJS extends SmallBaseListener {
     ArrayList<String> etiquetas_creadas = new ArrayList<String>();
     @Override
     public void enterId(SmallParser.IdContext ctx) {
-        if (ctx.id1().COLON() != null && !funciones_etiquetas.contains(ctx.ID().getText())) {
-            funciones_etiquetas.add(ctx.ID().getText());
-            funciones_etiquetas.add("");
-        }
-
-        // arrays
-        else if (ctx.id1().va() != null){
-            ParseTree va_op_dim = ctx.id1().va().va_op_dim();
-            if (va_op_dim != null && va_op_dim.getChild(0) != null){
-                checkObjectDeclaration((SmallParser.Va_op_dimContext) va_op_dim);
-                String idValue = ctx.ID().getText();
-
-                traduccion_array += idValue;
-                if (funciones_etiquetas.size() != 0) {
-                    funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
-                            1) + traduccion_array);
-                }
-                traduccion_array = "";
+        if(shouldTranslate){
+            if (ctx.id1().COLON() != null && !funciones_etiquetas.contains(ctx.ID().getText())) {
+                funciones_etiquetas.add(ctx.ID().getText());
+                funciones_etiquetas.add("");
             }
-            System.out.print(ctx.ID().getText());
-        }
 
-        else{
-            System.out.print(ctx.ID().getText());
-        }
+            // arrays
+            else if (ctx.id1().va() != null){
+                ParseTree va_op_dim = ctx.id1().va().va_op_dim();
+                if (va_op_dim != null && va_op_dim.getChild(0) != null){
+                    checkObjectDeclaration((SmallParser.Va_op_dimContext) va_op_dim);
+                    String idValue = ctx.ID().getText();
 
+                    traduccion_array += idValue;
+                    if (funciones_etiquetas.size() != 0) {
+                        funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
+                                1) + traduccion_array);
+                    }
+                    traduccion_array = "";
+                }
+                System.out.print(ctx.ID().getText());
+            }
+
+            else{
+                System.out.print(ctx.ID().getText());
+            }
+
+        }
     }
+
+    @Override
+    public void enterId1(SmallParser.Id1Context ctx){
+        if(shouldTranslate){
+            if(ctx.LEFT_PAREN()!=null){
+                System.out.println("();");
+            }
+        }
+    }
+
     @Override
     public void enterVa_op_dim(SmallParser.Va_op_dimContext ctx){
-        if (ctx.LEFT_BRAC() != null){
-            System.out.print("[");
+        if (shouldTranslate){
+            if (ctx.LEFT_BRAC() != null ){
+                System.out.print("[");
+            }
         }
     }
 
     @Override
     public void enterEx(SmallParser.ExContext ctx){
-        if (ctx.MINUS() != null){
-            System.out.print("-");
+        if(shouldTranslate){
+            if (ctx.MINUS() != null){
+                System.out.print("-");
+            }
         }
     }
 
     @Override
     public void enterEx1(SmallParser.Ex1Context ctx){
-        if (ctx.OR() != null){
-            System.out.print(" || ");
+        if(shouldTranslate){
+            if (ctx.OR() != null){
+                System.out.print(" || ");
+            }
         }
     }
 
     @Override
     public void enterEb1(SmallParser.Eb1Context ctx){
-        if (ctx.AND() != null){
-            System.out.print(" && ");
+        if(shouldTranslate){
+            if (ctx.AND() != null){
+                System.out.print(" && ");
+            }
         }
     }
 
     @Override
     public void enterRo(SmallParser.RoContext ctx){
-        if (ctx.LESS() != null){
-            System.out.print(" < ");
-        } else if (ctx.GREATER() != null) {
-            System.out.print(" > ");
-        } else if (ctx.EQUALS() != null) {
-            System.out.print(" == ");
-        } else if (ctx.LEQ() != null) {
-            System.out.print(" <= ");
-        } else if (ctx.GEQ() != null){
-            System.out.print(" >= ");
-        } else if (ctx.DIFF() != null) {
-            System.out.print(" != ");
+        if(shouldTranslate){
+            if (ctx.LESS() != null){
+                System.out.print(" < ");
+            } else if (ctx.GREATER() != null) {
+                System.out.print(" > ");
+            } else if (ctx.EQUALS() != null) {
+                System.out.print(" == ");
+            } else if (ctx.LEQ() != null) {
+                System.out.print(" <= ");
+            } else if (ctx.GEQ() != null){
+                System.out.print(" >= ");
+            } else if (ctx.DIFF() != null) {
+                System.out.print(" != ");
+            }
         }
     }
 
     @Override
     public void enterSo(SmallParser.SoContext ctx){
-        if (ctx.MINUS() != null){
-            System.out.print(" - ");
-        } else if (ctx.PLUS() != null) {
-            System.out.print(" + ");
+        if(shouldTranslate){
+            if (ctx.MINUS() != null){
+                System.out.print(" - ");
+            } else if (ctx.PLUS() != null) {
+                System.out.print(" + ");
+            }
         }
     }
 
     @Override
     public void enterMo(SmallParser.MoContext ctx){
-        if (ctx.TIMES() != null){
-            System.out.print(" * ");
-        } else if (ctx.DIV() != null) {
-            System.out.print(" / ");
+        if(shouldTranslate){
+            if (ctx.TIMES() != null){
+                System.out.print(" * ");
+            } else if (ctx.DIV() != null) {
+                System.out.print(" / ");
+            }
         }
     }
 
     @Override
     public void enterD(SmallParser.DContext ctx){
-        if (ctx.STR() != null){
-            System.out.print(ctx.getText());
-        } else if ( ctx.TRUE() != null) {
-            System.out.print(" true ");
-        } else if ( ctx.FALSE() != null) {
-            System.out.print(" false ");
-        } else if ( ctx.NUM() != null) {
-            System.out.print(ctx.NUM().getText());
-        } else if ( ctx.LEFT_PAREN() != null) {
-            System.out.print("(");
-        } else if ( ctx.ID() != null) {
-            System.out.print(ctx.ID().getText());
+        if(shouldTranslate){
+            if (ctx.STR() != null){
+                System.out.print(ctx.getText());
+            } else if ( ctx.TRUE() != null) {
+                System.out.print(" true ");
+            } else if ( ctx.FALSE() != null) {
+                System.out.print(" false ");
+            } else if ( ctx.NUM() != null) {
+                System.out.print(ctx.NUM().getText());
+            } else if ( ctx.LEFT_PAREN() != null) {
+                System.out.print("(");
+            } else if ( ctx.ID() != null) {
+                System.out.print(ctx.ID().getText());
+            }
         }
     }
     @Override
     public void enterId_op_dim(SmallParser.Id_op_dimContext ctx){
-        if (ctx.LEFT_BRAC() != null){
-            System.out.print("[");
+        if(shouldTranslate){
+            if (ctx.LEFT_BRAC() != null){
+                System.out.print("[");
+            }
         }
     }
 
     @Override
     public void enterBf(SmallParser.BfContext ctx){
-        // Check built in functions
-        if(ctx.rw() != null){
-            if(ctx.rw().getText().equals("TextWindow")){
-                if(ctx.ID().getText().equals("Write") || ctx.ID().getText().equals("WriteLine")){
-                    System.out.print("console.log(");
+        // Translate built-in functions
+        if(shouldTranslate){
+            if(ctx.rw() != null){
+                // TextWindow methods translation
+                if(ctx.rw().getText().equals("TextWindow")){
+                    if(ctx.ID().getText().equals("Write") || ctx.ID().getText().equals("WriteLine")){
+                        System.out.print("console.log(");
+                    }
+                    else if (ctx.ID().getText().equals("Read")) {
+                        System.out.print("prompt();\n");
+                        shouldTranslate = false;
+                    } else{
+                        System.out.println(ctx.getText());
+                        shouldTranslate = false;
+                    }
                 }
-                else if (ctx.ID().getText().equals("Read")) {
-                    System.out.print("prompt()");
+                // Array methods translation
+                else if (ctx.rw().getText().equals("Array")) {
+                    if(ctx.ID().getText().equals("ContainsIndex")){
+                        String array = ctx.pam().pal().pa().getText();
+                        String index = ctx.pam().pal().pal1().pa().getText();
+                        System.out.printf("%s in %s;\n" , index , array);
+                        shouldTranslate = false;
+                    } else if (ctx.ID().getText().equals("ContainsValue")) {
+                        String array = ctx.pam().pal().pa().getText();
+                        String value = ctx.pam().pal().pal1().pa().getText();
+                        System.out.printf("%s in Object.values(%s);\n" , value , array);
+                        shouldTranslate = false;
+                    } else if (ctx.ID().getText().equals("GetAllIndexes") || ctx.ID().getText().equals("GetItemCount")) {
+                        System.out.print("Object.keys(");
+                    } else if (ctx.ID().getText().equals("IsArray")){
+                        String array = ctx.pam().pal().pa().getText();
+                        System.out.printf("typeof %s === 'object';\n", array);
+                        shouldTranslate = false;
+                    } else{
+                        System.out.println(ctx.getText());
+                        shouldTranslate = false;
+                    }
+                }
+                // Stack methods
+                else if (ctx.rw().getText().equals("Stack")) {
+                    String stack = ctx.pam().pal().pa().getText();
+                    declareStack(stack);
+                    if(ctx.ID().getText().equals("PushValue")){
+                        String element = ctx.pam().pal().pal1().pa().getText();
+                        System.out.printf("%s.push(%s);\n",stack,element);
+                    }
+                    else if(ctx.ID().getText().equals("PopValue")){
+                        System.out.printf("%s.pop();\n",stack);
+                    } else if(ctx.ID().getText().equals("GetCount")) {
+                        System.out.printf("%s.length;\n",stack);
+                    }else{
+                        System.out.println(ctx.getText());
+                    }
+                    shouldTranslate = false;
+                }
+                // Program methods
+                else if (ctx.rw().getText().equals("Program")){
+                    if(ctx.ID().getText().equals("Delay")){
+                        System.out.print("setTimeout(()=>{},");
+                    } else if (ctx.ID().getText().equals("End")) {
+                        System.out.println("throw new error('Program was ended!');");
+                        shouldTranslate = false;
+                    } else{
+                        System.out.println(ctx.getText());
+                        shouldTranslate = false;
+                    }
                 }
             }
         }
     }
 
+    public void exitBf(SmallParser.BfContext ctx){
+        shouldTranslate = true;
+    }
+
     @Override
     public void exitEx(SmallParser.ExContext ctx){
-        // Check if this expression is an index for an array or dictionary
-        if(ctx.getParent().getRuleIndex() == 7){
-            System.out.print("]");
-        }
-        // Check if the right hand side expression is completed
-        else if(ctx.getParent().getRuleIndex() == 6){
-            System.out.println(";");
-        }
-        // Check if the expression is being called inside parenthesis
-        else if(ctx.getParent().getRuleIndex() == 36){
-            System.out.print(")");
-        }
-        // Check if the expression is being called inside brackets
-        else if (ctx.getParent().getRuleIndex() == 37) {
-            System.out.print("]");
-        }
-        // Check for textWindow function
-        else if (ctx.getParent().getRuleIndex() == 21){
-            SmallParser.BfContext bf = (SmallParser.BfContext)ctx.getParent().getParent().getParent().getParent();
-            if(bf.rw().getText().equals("TextWindow")){
-                System.out.println(");");
+        if(shouldTranslate){
+            // Check if this expression is an index for an array or dictionary
+            if(ctx.getParent().getRuleIndex() == 7){
+                System.out.print("]");
             }
+            // Check if the right hand side expression is completed
+            else if(ctx.getParent().getRuleIndex() == 6){
+                System.out.println(";");
+            }
+            // Check if the expression is being called inside parenthesis
+            else if(ctx.getParent().getRuleIndex() == 36){
+                System.out.print(")");
+            }
+            // Check if the expression is being called inside brackets
+            else if (ctx.getParent().getRuleIndex() == 37) {
+                System.out.print("]");
+            }
+            // Check if it's a built-in function
+            else if (ctx.getParent().getRuleIndex() == 21){
+                SmallParser.BfContext bf;
+                try{
+                    bf = (SmallParser.BfContext)ctx.getParent().getParent().getParent().getParent();
+                } catch (Exception e){
+                    return;
+                }
+                // Check for textWindow.write function, array.GetAllIndexes , array.getItemCount Function
+                if(bf.rw().getText().equals("TextWindow") || bf.rw().getText().equals("Program")){
+                    System.out.println(");");
+                } else if (bf.rw().getText().equals("Array")) {
+                    System.out.print(")");
+                    if(bf.ID().getText().equals("GetItemCount")){
+                        System.out.print(".length");
+                    }
+                    System.out.println(";");
+                }
+
+            }
+
+
         }
     }
 
     @Override
     public void exitVa_op_dim(SmallParser.Va_op_dimContext ctx){
-        // Check if the left side of the assignation is already complete, if it is, print the equals symbol
-        if(ctx.getParent().getRuleIndex() == 6){
-            System.out.print(" = ");
+        if (shouldTranslate){
+            // Check if the left side of the assignation is already complete, if it is, print the equals symbol
+            if(ctx.getParent().getRuleIndex() == 6){
+                System.out.print(" = ");
+            }
         }
     }
 

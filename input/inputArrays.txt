@@ -4,3 +4,20 @@ a = True Or False
 TextWindow.Write("a")
 TextWindow.Adios()
 TextWindow.Read(2)
+
+Stack.PushValue(stack,id)
+Stack.PopValue(stack)
+Stack.GetCount(stack)
+
+a()
+a[0]["adios"] = a[1] + 2
+Array.ContainsIndex(array, index)
+Array.ContainsValue(array, value)
+a[0]["adios"] = a[1] + 2
+Array.GetAllIndexes(array)
+Array.GetItemCount(array)
+Array.IsArray(var)
+TextWindow.Write(a)
+
+Program.Delay(3000)
+Program.End()
