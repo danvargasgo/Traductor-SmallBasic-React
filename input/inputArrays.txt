@@ -11,8 +11,31 @@ For i = 1 To n
      a = 4
     EndFor
 EndFor
+TextWindow.Write("##############################################################")
+
+While (i > 5)
+    variable = 3
+    For j = 1 To n Step 2
+      If (j = 2) Then
+        Stack.PushValue(stack1, j)
+      EndIf
+      a = 4
+    EndFor
+EndWhile
+
+TextWindow.Write("##############################################################")
+While (True)
+
+EndWhile
 
 
+For j = 1 To n Step 2
+      If (j = 2) Then
+
+      EndIf
+EndFor
+
+TextWindow.Write("##############################################################")
 a = (2+3)/2
 a = True Or False
 

@@ -12,7 +12,7 @@ public class SmallToJS extends SmallBaseListener {
     String traduccion_while = "";
     String traduccion_funcion = "";
     String traduccion_array = "";
-    // Variable that determines if expressions low in the syntax tree should be translated (In some cases when in need of a custom translation it must be disabled)
+    // Variable that is checked to determine if expressions low in the syntax tree should be translated (In some cases when in need of custom translations)
     Boolean shouldTranslate = true;
     /*
      * Private method for stacks
@@ -26,7 +26,7 @@ public class SmallToJS extends SmallBaseListener {
         }
     }
     /*
-     * Check if variable has already been defined
+     * Check if variable has already been declared
      */
     private static Set<String> variableNames = new HashSet<String>();
     private void declareVariable(String name){
