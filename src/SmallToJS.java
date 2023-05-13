@@ -8,21 +8,30 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class SmallToJS extends SmallBaseListener {
-    String traduccion_for = "";
-    String traduccion_while = "";
-    String traduccion_funcion = "";
-    String traduccion_array = "";
+    String traduccion = "";
     // Variable that is checked to determine if expressions low in the syntax tree should be translated (In some cases when in need of custom translations)
     Boolean shouldTranslate = true;
     /*
      * Private method for stacks
      */
     private static Set<String> stackNames = new HashSet<String>();
-
+    private void addTranslation(String translation){
+        if (funciones_etiquetas.size() != 0) {
+            funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
+                    1) + translation);
+        }
+        translation = "";
+    }
     private void declareStack(String name){
         if (!this.stackNames.contains(name)){
             stackNames.add(name);
             System.out.printf("var %s=[];\n", name);
+            traduccion_stack += "var " + name + "=[];\n";
+            if (funciones_etiquetas.size() != 0) {
+                funciones_etiquetas.set(funciones_etiquetas.size() - 1, funciones_etiquetas.get(funciones_etiquetas.size() -
+                        1) + traduccion_stack);
+            }
+            traduccion_stack = "";
         }
     }
     /*
