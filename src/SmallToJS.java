@@ -21,9 +21,31 @@ public class SmallToJS extends SmallBaseListener {
 
     private void declareStack(String name){
         if (!this.stackNames.contains(name)){
-            stackNames.add(name);
-            System.out.printf("var %s=[];\n", name);
+            String nameToAdd = getNewName(name);
+            stackNames.add(nameToAdd);
+            System.out.printf("var %s=[];\n", nameToAdd);
         }
+    }
+
+    /*
+    * Check if id name is js reserved word
+    */
+    String[] jsReservedWords = {"abstract", "arguments", "await", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "debugger", "default", "delete", "do", "double", "else", "enum", "eval", "export", "extends", "false", "final", "finally", "float", "for", "function", "goto", "if", "implements", "import", "in", "instanceof", "int", "interface", "let", "long", "native", "new", "null", "package", "private", "protected", "public", "return", "short", "static", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "true", "try", "typeof", "var", "void", "volatile", "while", "with", "yield"};
+
+    private boolean checkIfReservedWord (String name){
+        for (String reservedWord : jsReservedWords){
+            if (reservedWord.equals(name))
+                return true;
+        }
+        return false;
+    }
+
+    private String getNewName(String name){
+        String newName = name;
+        if (checkIfReservedWord(name)){
+            newName += "_var";
+        }
+        return newName;
     }
     /*
      * Check if variable has already been declared
@@ -74,7 +96,7 @@ public class SmallToJS extends SmallBaseListener {
             if (parent.getRuleIndex() == 6){
                 ParserRuleContext idContext = parent.getParent().getParent();
                 ParseTree ID = idContext.getChild(0);
-                String variable = ID.getText();
+                String variable = getNewName(ID.getText());
                 String indexation = variable + " " + ctx.getText().replace(']',' ').replace("[","").strip();
                 String[] indexationArray = indexation.split(" ");
                 String key = "";
@@ -252,7 +274,7 @@ public class SmallToJS extends SmallBaseListener {
                 ParseTree va_op_dim = ctx.id1().va().va_op_dim();
                 if (va_op_dim != null && va_op_dim.getChild(0) != null){
                     checkObjectDeclaration((SmallParser.Va_op_dimContext) va_op_dim);
-                    String idValue = ctx.ID().getText();
+                    String idValue = getNewName(ctx.ID().getText());
 
                     traduccion_array += idValue;
                     if (funciones_etiquetas.size() != 0) {
@@ -261,12 +283,12 @@ public class SmallToJS extends SmallBaseListener {
                     }
                     traduccion_array = "";
                 }
-                declareVariable(ctx.ID().getText());
-                System.out.print(ctx.ID().getText());
+                declareVariable(getNewName(ctx.ID().getText()));
+                System.out.print(getNewName(ctx.ID().getText()));
             }
 
             else{
-                System.out.print(ctx.ID().getText());
+                System.out.print(getNewName(ctx.ID().getText()));
             }
 
         }
