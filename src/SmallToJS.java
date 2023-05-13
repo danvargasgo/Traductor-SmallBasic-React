@@ -119,7 +119,7 @@ public class SmallToJS extends SmallBaseListener {
         //  For (let ID VA; ID <= EX; ID+=STEP){
         System.out.print("for(let ");
 
-        String id = ctx.ID().getText();
+        String id = getNewName(ctx.ID().getText());
         System.out.print(id);
         String va = ctx.va().getText();
         System.out.print(va);
@@ -208,7 +208,7 @@ public class SmallToJS extends SmallBaseListener {
     @Override
     public void enterSu(SmallParser.SuContext ctx){
         System.out.print("function ");
-        String id = ctx.ID().getText();
+        String id = getNewName(ctx.ID().getText());
         System.out.print(id);
         System.out.print(id);
         System.out.println("(){");
