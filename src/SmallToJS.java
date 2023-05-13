@@ -394,7 +394,7 @@ public class SmallToJS extends SmallBaseListener {
             } else if ( ctx.LEFT_PAREN() != null) {
                 System.out.print("(");
             } else if ( ctx.ID() != null) {
-                System.out.print(ctx.ID().getText());
+                System.out.print(getNewName(ctx.ID().getText()));
             }
         }
     }
