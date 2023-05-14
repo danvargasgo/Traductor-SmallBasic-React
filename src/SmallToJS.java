@@ -1,8 +1,8 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
-
+import java.util.regex.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -110,19 +110,25 @@ public class SmallToJS extends SmallBaseListener {
                 ParserRuleContext idContext = parent.getParent().getParent();
                 ParseTree ID = idContext.getChild(0);
                 String variable = getNewName(ID.getText());
-                String indexation = variable + " " + ctx.getText().replace(']',' ').replace("[","").strip();
-                String[] indexationArray = indexation.split(" ");
+                String indexation = variable + "@`@" + ctx.getText().replace("]","@`@").replace("[","").strip();
+                //System.out.println(indexation);
+                String[] indexationArray = indexation.split("@`@");
+                //for (String s : indexationArray){
+                //    System.out.println(s);
+                //}
                 String key = "";
                 for (int i=0; i<indexationArray.length - 1; i++){
                     key += indexationArray[i]+" ";
                     boolean updated = this.updateDeclaredObjectsSet(key.strip());
                     if (updated){
+                        //System.out.println(key.strip());
                         printNewObject(key.strip());
                     }
                 }
             }
         }
     }
+
 
     /*
      * FOR LOOPS
@@ -219,6 +225,11 @@ public class SmallToJS extends SmallBaseListener {
             aumentarContador();
         }
     };
+    @Override
+    public void enterSusl(SmallParser.SuslContext ctx){
+        if (!no_traducir)
+            shouldTranslate = true;
+    }
     @Override
     public void exitSu(SmallParser.SuContext ctx){
         if (!no_traducir) {
@@ -549,6 +560,7 @@ public class SmallToJS extends SmallBaseListener {
         }
     }
 
+
     public void exitBf(SmallParser.BfContext ctx){
         if (!no_traducir) {
             shouldTranslate = true;
@@ -610,6 +622,7 @@ public class SmallToJS extends SmallBaseListener {
             }
         }
     }
+
 
     @Override
     public void exitVa_op_dim(SmallParser.Va_op_dimContext ctx){
