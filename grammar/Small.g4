@@ -95,6 +95,6 @@ RIGHT_PAREN: ')';
 STR: '"'.*?'"';
 NUM: [0-9]+('.'[0-9]*)?;
 // ID debe comenzar por una letra (ya sea mayúscula o minúscula); después de ello puede contener solamente números, guiones bajos (“_”) y más letras. Además, reconoce carácteres como eñes, tildes, diéresis y cedillas.
-ID: [a-zA-Z\u00F1\u00D1][a-zA-Z\u00F1\u00D10-9_]*;
+ID: [a-zA-Z\u00E1\u00E9\u00ED\u00F3\u00FA\u00C1\u00C9\u00CD\u00D3\u00DA\u00FC\u00DC\u00E7\u00C7\u00F1\u00D1][a-zA-Z\u00E1\u00E9\u00ED\u00F3\u00FA\u00C1\u00C9\u00CD\u00D3\u00DA\u00FC\u00DC\u00E7\u00C7\u00F1\u00D10-9_]*;
 
 //áéíóúÁÉÍÓÚüÜçÇ

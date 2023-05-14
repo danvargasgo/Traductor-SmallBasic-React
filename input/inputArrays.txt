@@ -1,5 +1,6 @@
 return[0][2][3] = 1
 n = 10
+núbia = 4
 For i = 1 To n
    a = 3
    For j = 1 To n Step 2

@@ -1,4 +1,4 @@
-// Generated from C:/Users/danie/Downloads/Traductor Small To JS/grammar\Small.g4 by ANTLR 4.12.0
+// Generated from /home/facaslo/Documents/UN material/Programming Languages/Traductor-SmallBasic-React/grammar/Small.g4 by ANTLR 4.12.0
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
