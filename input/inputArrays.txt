@@ -1,3 +1,4 @@
+return[0][2][3] = 1
 n = 10
 For i = 1 To n
    a = 3
@@ -9,7 +10,7 @@ For i = 1 To n
         EndIf
      EndWhile
      a = 4
-    EndFor
+   EndFor
 EndFor
 TextWindow.Write("##############################################################")
 
@@ -154,4 +155,6 @@ i = i - 1
 
 If (i > 0) Then
    Goto loop
+   i = 2
+   var = 3
 EndIf

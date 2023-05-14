@@ -1,7 +1,12 @@
+TextWindow.variable(2, "a", b[0])
 start:
+nombre()
 TextWindow.WriteLine(i)
 i = i + 1
 If (i < 25) Then
+  i = i + 1
+  abc = 52
+  ab[0] = "a"
   Goto start
 EndIf
 
