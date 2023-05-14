@@ -22,6 +22,7 @@ public class SmallToJS extends SmallBaseListener {
             ParseTree child = ctx.getChild(i);
             try{
                 RuleContext rule = (RuleContext) child;
+                // Check if array
                 if (rule.getRuleIndex() == 4){
                     SmallParser.IdContext id = (SmallParser.IdContext) rule;
                     if (id.id1().va() != null) {
@@ -31,7 +32,14 @@ public class SmallToJS extends SmallBaseListener {
                                 checkObjectDeclaration((SmallParser.Va_op_dimContext) va_op_dim);
                             }
                         }
+                    } //Check if stack
+                } else if (rule.getRuleIndex() == 17) {
+                    SmallParser.BfContext bf = (SmallParser.BfContext) rule;
+                    if (bf.rw().getText().equals("Stack")) {
+                        String stack = bf.pam().pal().pa().getText();
+                        declareStack(stack);
                     }
+                    
                 }
             }catch (Exception e){
                 //System.out.println("Not a rule context");
@@ -76,7 +84,7 @@ public class SmallToJS extends SmallBaseListener {
             String nameToAdd = getNewName(name);
             stackNames.add(nameToAdd);
             System.out.printf("var %s=[];\n", nameToAdd);
-            addTranslation("var " + nameToAdd + "=[];\n");
+            //addTranslation("var " + nameToAdd + "=[];\n");
         }
     }
 
@@ -134,7 +142,7 @@ public class SmallToJS extends SmallBaseListener {
         }
         declareObject += " = {};";
         System.out.println(declareObject);
-        addTranslation(declareObject);
+        // addTranslation(declareObject);
     }
     private void checkObjectDeclaration(SmallParser.Va_op_dimContext ctx){
         // Check if the dictionaries(arrays) have already been declared, if not, create the necessary arrays and nestings
@@ -558,7 +566,7 @@ public class SmallToJS extends SmallBaseListener {
                     // Stack methods
                     else if (ctx.rw().getText().equals("Stack")) {
                         String stack = ctx.pam().pal().pa().getText();
-                        declareStack(stack);
+                        // declareStack(stack);
                         if (ctx.ID().getText().equals("PushValue")) {
                             String element = ctx.pam().pal().pal1().pa().getText();
                             System.out.printf("%s.push(%s);\n", stack, element);
