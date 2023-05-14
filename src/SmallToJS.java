@@ -36,7 +36,7 @@ public class SmallToJS extends SmallBaseListener {
                 } else if (rule.getRuleIndex() == 17) {
                     SmallParser.BfContext bf = (SmallParser.BfContext) rule;
                     if (bf.rw().getText().equals("Stack")) {
-                        String stack = bf.pam().pal().pa().getText();
+                        String stack = getNewName(bf.pam().pal().pa().getText());
                         declareStack(stack);
                     }
                     
@@ -108,6 +108,7 @@ public class SmallToJS extends SmallBaseListener {
         }
         return newName;
     }
+
     /*
      * Check if variable has already been declared
      */
@@ -307,8 +308,7 @@ public class SmallToJS extends SmallBaseListener {
     public void enterC1(SmallParser.C1Context ctx) {
         if (!no_traducir) {
             if (ctx.ELSEIF() != null) {
-                System.out.println("} else if (" + ctx.ex().getText() + ") {");
-                addTranslation("} else if (" + ctx.ex().getText() + ") {\n");
+                System.out.print("} else if (");
             } else if (ctx.ELSE() != null) {
                 System.out.println("} else {");
                 addTranslation("} else {\n");
@@ -565,7 +565,7 @@ public class SmallToJS extends SmallBaseListener {
                     }
                     // Stack methods
                     else if (ctx.rw().getText().equals("Stack")) {
-                        String stack = ctx.pam().pal().pa().getText();
+                        String stack = getNewName(ctx.pam().pal().pa().getText());
                         // declareStack(stack);
                         if (ctx.ID().getText().equals("PushValue")) {
                             String element = ctx.pam().pal().pal1().pa().getText();
@@ -657,8 +657,8 @@ public class SmallToJS extends SmallBaseListener {
                         addTranslation(";\n");
                     }
                 }
-                // Check if expression is being called in a while or in an if
-                else if (ctx.getParent().getRuleIndex() == 15 || ctx.getParent().getRuleIndex() == 8) {
+                // Check if expression is being called in a while or in an if or in an else if
+                else if (ctx.getParent().getRuleIndex() == 15 || ctx.getParent().getRuleIndex() == 8 || ctx.getParent().getRuleIndex() == 9) {
                     System.out.println("){");
                     addTranslation("){\n");
                 }
