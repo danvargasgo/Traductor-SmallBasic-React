@@ -3,13 +3,48 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.*;
+
+import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.tool.Rule;
 
 public class SmallToJS extends SmallBaseListener {
     // Variable that is checked to determine if expressions low in the syntax tree should be translated (In some cases when in need of custom translations)
     Boolean shouldTranslate = true;
+    /*
+    * Breadth width parsing to declare arrays to the beginning of the document
+    */
+
+    private void breadthWidthParsing(ParserRuleContext ctx){
+        for (int i=0; i<ctx.getChildCount(); i++){
+            ParseTree child = ctx.getChild(i);
+            try{
+                RuleContext rule = (RuleContext) child;
+                if (rule.getRuleIndex() == 4){
+                    SmallParser.IdContext id = (SmallParser.IdContext) rule;
+                    if (id.id1().va() != null) {
+                        ParseTree va_op_dim = id.id1().va().va_op_dim();
+                        if (va_op_dim != null) {
+                            if (va_op_dim.getChild(0) != null) {
+                                checkObjectDeclaration((SmallParser.Va_op_dimContext) va_op_dim);
+                            }
+                        }
+                    }
+                }
+            }catch (Exception e){
+                //System.out.println("Not a rule context");
+            }
+
+            if (child.getChildCount() > 0){
+                breadthWidthParsing((ParserRuleContext) child);
+            }
+        }
+    }
+
+
+
     /*
      * Private method for stacks
      */
@@ -293,7 +328,7 @@ public class SmallToJS extends SmallBaseListener {
                     ParseTree va_op_dim = ctx.id1().va().va_op_dim();
                     if (va_op_dim != null) {
                         if (va_op_dim.getChild(0) != null) {
-                            checkObjectDeclaration((SmallParser.Va_op_dimContext) va_op_dim);
+                            //checkObjectDeclaration((SmallParser.Va_op_dimContext) va_op_dim);
                             String newName = getNewName(ctx.ID().getText());
                             System.out.print(newName);
                             addTranslation(newName);
@@ -680,6 +715,7 @@ public class SmallToJS extends SmallBaseListener {
     String etiqueta_pendiente;
     @Override
     public void enterP(SmallParser.PContext ctx) {
+        breadthWidthParsing(ctx);
         texto_todo = ctx.getText();
     }
 }
