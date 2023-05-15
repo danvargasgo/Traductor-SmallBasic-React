@@ -8,12 +8,6 @@ salto:
 
 i = 20
 
-Goto salto2
-
-TextWindow.WriteLine("Esto no debe imprimirse")
-
-salto2:
-
 While (i > 0)
    test3 = i - 3 * (i / 3)
    test5 = i - 5 * (i / 5)
